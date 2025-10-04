@@ -12,6 +12,7 @@
     * [Retrieval Environment Setup](#retrieval-environment-setup)
         + [BM25](#bm25)
         + [qwen3_0.6](#qwen3_06)
+    * [LLM Inference (Enforced Multi-Round)](#llm-inference-enforced-multi-round)
 
 ## Environment Setup
 
@@ -82,3 +83,13 @@ Deploy a local embedding server with vLLM.
 ```bash
 vllm serve Qwen/Qwen3-Embedding-0.6B --port QWEN_RETRIEVER_EMB_PORT --api-key token-abc123 --gpu-memory-utilization 0.95 --trust-remote-code --enforce-eager
 ```
+
+### LLM Inference (Enforced Multi-Round)
+
+```bash
+python infer_multi.py --llm MODEL_TO_EVALUATE --retriever RETRIEVER_FOR_HAYSTACK_CONSTRUCTION --emb_port IF_USE_QWEN_RETRIEVER_ABOVE --context_size TARGET_CONTEXT_SIZE --num_rounds NUM_REASONING_ROUNDS
+```
+
+For inference with locally deployed open source LLMs, specify the port you use in vLLM deployment, e.g., `--port 8000`.
+
+Additionally specify `--ppr` for graph-based reranking with Personalized PageRank (PPR) in haystack construction.
