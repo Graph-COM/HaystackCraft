@@ -1,3 +1,28 @@
+import os
+
+# Set TOKENIZERS_PARALLELISM to false to avoid warnings with multiprocessing
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
+def parse_token_count(value):
+    """Parse token count from string format like '64K', '128K' etc."""
+    if isinstance(value, int):
+        return value
+    
+    value = str(value).upper().strip()
+    
+    # Handle direct integer input
+    if value.isdigit():
+        return int(value)
+    
+    # Parse with suffixes
+    if value.endswith('K'):
+        return int(float(value[:-1]) * 1000)
+    else:
+        raise ValueError(f"Invalid token count format: {value}. Use formats like '64K', '128K', '1M', or plain integers.")
+
+def main(args):
+    pass
+
 if __name__ == '__main__':
     from argparse import ArgumentParser
     
@@ -19,4 +44,19 @@ if __name__ == '__main__':
                         help="Base timeout in seconds for API requests (default: 60, will scale with context length)")
     parser.add_argument("--port", type=int,
                         help="Port for the local API server (default: 8000)")
+    parser.add_argument("--retriever", type=str, required=True,
+                        choices=["bm25", "qwen3_0.6", "hybrid_bm25_qwen3_0.6"])
+    parser.add_argument("--ppr", action="store_true")
+    parser.add_argument("--context_size", type=parse_token_count, required=True,
+                        choices=[8_000, 16_000, 32_000, 64_000, 96_000, 128_000],
+                        help="Target token size for the constructed context (e.g., 8K, 16K, 32K, 64K, 128K). "
+                             "Also accepts plain integers.")
+    parser.add_argument("--order", type=str, choices=[
+        'descending_order',
+        'permutation_1',
+        'permutation_2',
+        'permutation_3'
+    ], help="Use descending_order for retrieval-ranked order.")
+    args = parser.parse_args()
+    main(args)
     
