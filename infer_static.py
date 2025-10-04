@@ -1,6 +1,9 @@
+import json
 import os
 
-from utils.data import load_data, filter_cached
+from tqdm import tqdm
+
+from utils.data import load_data, filter_cached, download_if_not_exists
 
 # Set TOKENIZERS_PARALLELISM to false to avoid warnings with multiprocessing
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -21,6 +24,36 @@ def parse_token_count(value):
         return int(float(value[:-1]) * 1000)
     else:
         raise ValueError(f"Invalid token count format: {value}. Use formats like '64K', '128K', '1M', or plain integers.")
+
+def format_context(context):
+    """Format the context list into a single string."""
+    return '\n\n'.join(
+        [f"Article {idx+1}\n: {doc_str}" for idx, doc_str in enumerate(context)]
+    )
+
+def load_context_file(args, data_all):
+    qid2context = dict()
+
+    if args.ppr:
+        context_file = f'data/{args.retriever}_ppr/seed_{args.k}_alpha_{args.alpha}/{args.context_size}.jsonl'
+    else:
+        context_file = f'data/{args.retriever}/{args.context_size}.jsonl'
+    download_if_not_exists(context_file)
+    print(f'Loading context file: {context_file}')
+    
+    with open(context_file, 'r') as f:
+        for line in tqdm(f, desc='Loading contexts'):
+            record = json.loads(line)
+            q_id = record['id']
+            docs_added = record['docs_added']
+            doc_order = record[args.order]
+            ordered_docs = [
+                docs_added[did] for did in doc_order
+            ]
+            qid2context[q_id] = format_context(ordered_docs)
+    
+    for item in tqdm(data_all, desc='Inserting contexts'):
+        item['context'] = qid2context[item['id']]
 
 def main(args):
     if args.ppr:
@@ -53,6 +86,8 @@ def main(args):
     data = filter_cached(out_file, data_all)
     if len(data) == 0:
         return
+    
+    load_context_file(args, data)
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
