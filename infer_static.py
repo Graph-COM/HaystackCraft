@@ -21,7 +21,31 @@ def parse_token_count(value):
         raise ValueError(f"Invalid token count format: {value}. Use formats like '64K', '128K', '1M', or plain integers.")
 
 def main(args):
-    pass
+    if args.ppr:
+        if args.retriever == "bm25":
+            args.k = 10
+        elif args.retriever == "qwen3_0.6":
+            args.k = 5
+        elif args.retriever == "hybrid_bm25_qwen3_0.6":
+            args.k = 5
+        else:
+            raise NotImplementedError
+        
+        if args.retriever == "bm25":
+            args.alpha = 0.5
+        elif args.retriever == "qwen3_0.6":
+            args.alpha = 0.5
+        elif args.retriever == "hybrid_bm25_qwen3_0.6":
+            args.alpha = 0.15
+        else:
+            raise NotImplementedError
+        
+        save_dir = f"results/{args.retriever}_ppr/seed_{args.k}_alpha_{args.alpha}/{args.llm}/{args.context_size}/{args.order}"
+    else:
+        save_dir = f"results/{args.retriever}/{args.llm}/{args.context_size}/{args.order}"
+    os.makedirs(save_dir, exist_ok=True)
+    
+    out_file = os.path.join(save_dir, 'pred.jsonl')
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
