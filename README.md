@@ -9,6 +9,7 @@
 - [Environment Setup](#environment-setup)
 - [Static NIAH with Heterogeneous Retrieval Strategies](#static-niah-with-heterogeneous-retrieval-strategies)
 - [Dynamic NIAH](#dynamic-niah)
+    * [Retrieval Environment Setup](#retrieval-environment-setup)
 
 ## Environment Setup
 
@@ -59,3 +60,5 @@ python eval.py --result_dir results/bm25/Llama-3.1-8B-Instruct/8000/descending_o
 ```
 
 ## Dynamic NIAH
+
+### Retrieval Environment Setup
