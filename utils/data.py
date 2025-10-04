@@ -36,3 +36,18 @@ def load_data():
                 data.append(json.loads(line))
     
     return data
+
+def filter_cached(out_file, data_all):
+    ids_done = set()
+    if os.path.exists(out_file):
+        with open(out_file, encoding='utf-8') as f:
+            ids_done = set([
+                json.loads(line)["id"] for line in f
+            ])
+    
+    data = []
+    for item in data_all:
+        if item["id"] not in ids_done:
+            data.append(item)
+    
+    return data

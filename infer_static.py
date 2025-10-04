@@ -1,6 +1,6 @@
 import os
 
-from utils.data import load_data
+from utils.data import load_data, filter_cached
 
 # Set TOKENIZERS_PARALLELISM to false to avoid warnings with multiprocessing
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -50,6 +50,9 @@ def main(args):
     out_file = os.path.join(save_dir, 'pred.jsonl')
     
     data_all = load_data()
+    data = filter_cached(out_file, data_all)
+    if len(data) == 0:
+        return
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
