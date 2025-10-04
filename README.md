@@ -13,6 +13,7 @@
         + [BM25](#bm25)
         + [qwen3_0.6](#qwen3_06)
     * [LLM Inference (Enforced Multi-Round)](#llm-inference-enforced-multi-round)
+    * [LLM Inference (Variable-Round)](#llm-inference-variable-round)
     * [Evaluation](#evaluation)
 
 ## Environment Setup
@@ -88,12 +89,24 @@ vllm serve Qwen/Qwen3-Embedding-0.6B --port QWEN_RETRIEVER_EMB_PORT --api-key to
 ### LLM Inference (Enforced Multi-Round)
 
 ```bash
-python infer_multi.py --llm MODEL_TO_EVALUATE --retriever RETRIEVER_FOR_HAYSTACK_CONSTRUCTION --emb_port IF_USE_QWEN_RETRIEVER_ABOVE --context_size TARGET_CONTEXT_SIZE --num_rounds NUM_REASONING_ROUNDS
+python infer_multi.py --llm MODEL_TO_EVALUATE --retriever RETRIEVER_FOR_HAYSTACK_CONSTRUCTION --context_size TARGET_CONTEXT_SIZE --num_rounds NUM_REASONING_ROUNDS
 ```
 
-For inference with locally deployed open source LLMs, specify the port you use in vLLM deployment, e.g., `--port 8000`.
+Additional args:
+- `--port`: For inference with locally deployed open source LLMs, specify the port you use in vLLM deployment, e.g., `--port 8000`.
+- `--emb_port`: If you use `Qwen3-Embedding-0.6B` for haystack construction, specify `QWEN_RETRIEVER_EMB_PORT` used above.
+- `--ppr`: Specify `--ppr` for graph-based reranking with Personalized PageRank (PPR) in haystack construction.
 
-Additionally specify `--ppr` for graph-based reranking with Personalized PageRank (PPR) in haystack construction.
+### LLM Inference (Variable-Round)
+
+```bash
+python infer_variable.py --llm MODEL_TO_EVALUATE --retriever RETRIEVER_FOR_HAYSTACK_CONSTRUCTION --context_size TARGET_CONTEXT_SIZE --max_rounds MAX_REASONING_ROUNDS
+```
+
+Additional args:
+- `--port`: For inference with locally deployed open source LLMs, specify the port you use in vLLM deployment, e.g., `--port 8000`.
+- `--emb_port`: If you use `Qwen3-Embedding-0.6B` for haystack construction, specify `QWEN_RETRIEVER_EMB_PORT` used above.
+- `--ppr`: Specify `--ppr` for graph-based reranking with Personalized PageRank (PPR) in haystack construction.
 
 ### Evaluation
 
