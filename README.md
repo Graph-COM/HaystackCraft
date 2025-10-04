@@ -1,3 +1,3 @@
 # HaystackCraft
 
-[Paper](./paper.pdf)
+[[Link to Paper]](./paper.pdf)
