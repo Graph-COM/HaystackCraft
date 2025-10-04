@@ -34,3 +34,9 @@ export GEMINI_API_KEY=...
 ## Static NIAH with Heterogeneous Retrieval Strategies
 
 For access to certain open source LLMs, you may need to first specify your huggingface token with `export HUGGING_FACE_HUB_TOKEN=...`.
+
+We use vLLM for LLM serving, e.g.,
+
+```bash
+vllm serve meta-llama/Llama-3.1-8B-Instruct --api-key token-abc123 --gpu-memory-utilization 0.95 --trust-remote-code --port 8000
+```
