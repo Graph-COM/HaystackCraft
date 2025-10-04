@@ -10,6 +10,8 @@
 - [Static NIAH with Heterogeneous Retrieval Strategies](#static-niah-with-heterogeneous-retrieval-strategies)
 - [Dynamic NIAH](#dynamic-niah)
     * [Retrieval Environment Setup](#retrieval-environment-setup)
+        + [BM25](#bm25)
+        + [qwen3_0.6](#qwen3_06)
 
 ## Environment Setup
 
