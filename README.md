@@ -62,3 +62,21 @@ python eval.py --result_dir results/bm25/Llama-3.1-8B-Instruct/8000/descending_o
 ## Dynamic NIAH
 
 ### Retrieval Environment Setup
+
+#### BM25
+
+Install Java 21 with for example
+
+```bash
+curl -s "https://get.sdkman.io" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+sdk install java 21.0.3-tem
+```
+
+#### qwen3_0.6
+
+Deploy a local embedding server with vLLM.
+
+```bash
+vllm serve Qwen/Qwen3-Embedding-0.6B --port QWEN_RETRIEVER_EMB_PORT --api-key token-abc123 --gpu-memory-utilization 0.95 --trust-remote-code --enforce-eager
+```
