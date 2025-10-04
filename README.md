@@ -7,6 +7,7 @@
 ## Table of Contents
 
 - [Environment Setup](#environment-setup)
+- [Static NIAH with Heterogeneous Retrieval Strategies](#static-niah-with-heterogeneous-retrieval-strategies)
 
 ## Environment Setup
 
@@ -29,3 +30,5 @@ If you need to evaluate Gemini models, specify your Gemini API key with
 ```bash
 export GEMINI_API_KEY=...
 ```
+
+## Static NIAH with Heterogeneous Retrieval Strategies
