@@ -35,7 +35,7 @@ export GEMINI_API_KEY=...
 
 For access to certain open source LLMs, you may need to first specify your huggingface token with `export HUGGING_FACE_HUB_TOKEN=...`.
 
-We use vLLM for LLM serving, e.g.,
+We use vLLM for serving open source LLMs, e.g.,
 
 ```bash
 vllm serve meta-llama/Llama-3.1-8B-Instruct --api-key token-abc123 --gpu-memory-utilization 0.95 --trust-remote-code --port 8000
@@ -44,7 +44,9 @@ vllm serve meta-llama/Llama-3.1-8B-Instruct --api-key token-abc123 --gpu-memory-
 For LLM inference,
 
 ```bash
-python infer_static.py --llm MODEL_TO_EVALUATE --port PORT_YOU_USE_ABOVE --retriever RETRIEVER_FOR_HAYSTACK_CONSTRUCTION --context_size TARGET_CONTEXT_SIZE --order HAYSTACK_ORDERING
+python infer_static.py --llm MODEL_TO_EVALUATE --retriever RETRIEVER_FOR_HAYSTACK_CONSTRUCTION --context_size TARGET_CONTEXT_SIZE --order HAYSTACK_ORDERING
 ```
 
 Additionally specify `--ppr` for graph-based reranking with Personalized PageRank (PPR) in haystack construction.
+
+For inference with locally deployed open source LLMs, specify the port you use in vLLM deployment, e.g., `--port 8000`.
