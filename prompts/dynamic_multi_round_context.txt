@@ -1,0 +1,18 @@
+$OPENING$
+
+$PREV_SUMMARY$
+
+<text>
+$DOC$
+</text>
+
+Question: $Q$
+
+$INSTRUCTION$
+
+If you have complete information to fully answer the question, format your response as follows: "The correct answer is (insert answer here)". 
+
+If you need more information, format your response as follows:
+Summary: (Summarize what you found in the articles that relates to the question, including any partial answers, relevant context, or gaps in information.)
+
+Refined Question: (Copy the original question or replace it with a more specific question based on your findings.) 

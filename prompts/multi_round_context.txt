@@ -1,0 +1,16 @@
+$OPENING$
+
+$PREV_SUMMARY$
+
+<text>
+$DOC$
+</text>
+
+Question: $Q$
+
+$INSTRUCTION$
+
+Format your response as follows:
+Summary: (Summarize what you found in the articles that relates to the question, including any partial answers, relevant context, or gaps in information.)
+
+Refined Question: (Copy the original question or replace it with a more specific question based on your findings.) 
