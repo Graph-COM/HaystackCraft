@@ -1,1 +1,3 @@
 # HaystackCraft
+
+[Paper](./paper.pdf)
