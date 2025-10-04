@@ -1,7 +1,39 @@
+import os
+
 from utils.setup import parse_token_count
 
 def main(args):
-    pass
+    if args.llm in ["gemini-2.5-flash-lite", "gemini-2.5-pro", "Qwen3-8B"]:
+        args.max_new_tokens = None
+    elif args.llm in ["Llama-3.1-8B-Instruct", "Qwen2.5-7B-Instruct-1M", 
+                      "gemma-3-12b-it"]:
+        args.max_new_tokens = 512
+    elif args.llm in ["gpt-5-mini-2025-08-07", "gpt-5-2025-08-07"]:
+        args.max_new_tokens = 16382        
+    else:
+        raise NotImplementedError
+
+    if args.ppr:
+        if args.retriever == "bm25":
+            args.k = 10
+        elif args.retriever == "qwen3_0.6":
+            args.k = 5
+        else:
+            raise NotImplementedError
+        
+        if args.retriever == "bm25":
+            args.alpha = 0.5
+        elif args.retriever == "qwen3_0.6":
+            args.alpha = 0.5
+        else:
+            raise NotImplementedError
+        
+        save_dir = f"{args.num_rounds}_round_results/{args.retriever}_ppr/seed_{args.k}_alpha_{args.alpha}/{args.llm}/{args.context_size}/{args.order}"
+    else:
+        save_dir = f"{args.num_rounds}_round_results/{args.retriever}/{args.llm}/{args.context_size}/{args.order}"
+    os.makedirs(save_dir, exist_ok=True)
+    
+    out_file = os.path.join(save_dir, 'pred.jsonl')
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
