@@ -32,3 +32,5 @@ export GEMINI_API_KEY=...
 ```
 
 ## Static NIAH with Heterogeneous Retrieval Strategies
+
+For access to certain open source LLMs, you may need to first specify your huggingface token with `export HUGGING_FACE_HUB_TOKEN=...`.
