@@ -13,6 +13,7 @@
         + [BM25](#bm25)
         + [qwen3_0.6](#qwen3_06)
     * [LLM Inference (Enforced Multi-Round)](#llm-inference-enforced-multi-round)
+    * [Evaluation](#evaluation)
 
 ## Environment Setup
 
@@ -93,3 +94,11 @@ python infer_multi.py --llm MODEL_TO_EVALUATE --retriever RETRIEVER_FOR_HAYSTACK
 For inference with locally deployed open source LLMs, specify the port you use in vLLM deployment, e.g., `--port 8000`.
 
 Additionally specify `--ppr` for graph-based reranking with Personalized PageRank (PPR) in haystack construction.
+
+### Evaluation
+
+For example
+
+```bash
+python eval_100.py --result_dir 2_round_results/qwen3_0.6/gemini-2.5-flash-lite/8000/descending_order
+```
