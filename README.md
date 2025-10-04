@@ -40,3 +40,11 @@ We use vLLM for LLM serving, e.g.,
 ```bash
 vllm serve meta-llama/Llama-3.1-8B-Instruct --api-key token-abc123 --gpu-memory-utilization 0.95 --trust-remote-code --port 8000
 ```
+
+For LLM inference,
+
+```bash
+python infer_static.py --llm MODEL_TO_EVALUATE --port PORT_YOU_USE_ABOVE --retriever RETRIEVER_FOR_HAYSTACK_CONSTRUCTION --context_size TARGET_CONTEXT_SIZE --order HAYSTACK_ORDERING
+```
+
+Additionally specify `--ppr` for graph-based reranking with Personalized PageRank (PPR) in haystack construction.
