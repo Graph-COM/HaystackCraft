@@ -1,0 +1,12 @@
+vllm==0.9.0
+transformers==4.52.4
+datasets==3.3.2
+huggingface_hub==0.32.4
+accelerate==0.26.0
+igraph==0.11.8
+ipdb
+nltk==3.9.1
+pyserini==0.44.0
+faiss-gpu==1.7.2
+google-genai
+numpy==1.26.4
