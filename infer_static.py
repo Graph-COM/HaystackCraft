@@ -4,6 +4,7 @@ import os
 from tqdm import tqdm
 
 from utils.data import load_data, filter_cached, download_if_not_exists
+from utils.llm import get_pred
 
 # Set TOKENIZERS_PARALLELISM to false to avoid warnings with multiprocessing
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -88,6 +89,8 @@ def main(args):
         return
     
     load_context_file(args, data)
+    
+    get_pred(data, args, out_file)
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
