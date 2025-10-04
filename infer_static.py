@@ -96,12 +96,12 @@ if __name__ == '__main__':
     parser.add_argument("--base_timeout", type=int, default=60,
                         help="Base timeout in seconds for API requests (default: 60, will scale with context length)")
     parser.add_argument("--port", type=int,
-                        help="Port for the local API server (default: 8000)")
+                        help="Port for the local API server")
     parser.add_argument("--retriever", type=str, required=True,
                         choices=["bm25", "qwen3_0.6", "hybrid_bm25_qwen3_0.6"])
     parser.add_argument("--ppr", action="store_true")
     parser.add_argument("--context_size", type=parse_token_count, required=True,
-                        choices=[8_000, 16_000, 32_000, 64_000, 96_000, 128_000],
+                        choices=[8_000, 16_000, 32_000, 64_000, 128_000],
                         help="Target token size for the constructed context (e.g., 8K, 16K, 32K, 64K, 128K). "
                              "Also accepts plain integers.")
     parser.add_argument("--order", type=str, required=True, choices=[
