@@ -79,12 +79,12 @@ if __name__ == '__main__':
                         choices=[8_000, 16_000, 32_000, 64_000, 96_000, 128_000],
                         help="Target token size for the constructed context (e.g., 8K, 16K, 32K, 64K, 128K). "
                              "Also accepts plain integers.")
-    parser.add_argument("--order", type=str, choices=[
+    parser.add_argument("--order", type=str, required=True, choices=[
         'descending_order',
         'permutation_1',
         'permutation_2',
         'permutation_3'
-    ], help="Use descending_order for retrieval-ranked order.")
+    ], help="Use descending_order for retrieval-ranked order. The rest are three random permutations.")
     args = parser.parse_args()
     main(args)
     
