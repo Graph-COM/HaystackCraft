@@ -37,6 +37,18 @@ def load_data():
     
     return data
 
+def load_data_100():
+    data = []
+    
+    full_file = os.path.join('data', '100_for_multi.jsonl')
+    download_if_not_exists(full_file)
+    
+    with open(full_file, 'r', encoding='utf-8') as f:
+        for line in f:
+            data.append(json.loads(line))
+    
+    return data
+
 def filter_cached(out_file, data_all):
     ids_done = set()
     if os.path.exists(out_file):
