@@ -50,3 +50,9 @@ python infer_static.py --llm MODEL_TO_EVALUATE --retriever RETRIEVER_FOR_HAYSTAC
 Additionally specify `--ppr` for graph-based reranking with Personalized PageRank (PPR) in haystack construction.
 
 For inference with locally deployed open source LLMs, specify the port you use in vLLM deployment, e.g., `--port 8000`.
+
+For evaluation, do for example
+
+```bash
+python eval.py --result_dir results/bm25/Llama-3.1-8B-Instruct/8000/descending_order/
+```
