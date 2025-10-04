@@ -1,10 +1,131 @@
+import json
 import os
 
+from tqdm import tqdm
 from transformers import AutoTokenizer
 
 from utils.data import load_data_100, filter_cached, load_docs
-from utils.llm import init_tokenizer_client
+from utils.llm import init_tokenizer_client, query_llm, extract_answer
 from utils.setup import parse_token_count
+
+def get_haystack_prompt(
+    item, 
+    query, 
+    docs, 
+    ordered_score_did, 
+    template, 
+    context_size, 
+    context_tokenizer,
+    all_summaries,
+    is_final_round=False
+):
+    doc2score = {did: score for (score, did) in ordered_score_did}
+    
+    num_doc_count = 0
+    docs_added = dict()
+    
+    golden_doc_ids = set(item['p2d_id'].values())
+    sep_token_count = len(context_tokenizer.encode("\n\n"))
+
+    golden_doc_str_list = []
+    for did in golden_doc_ids:
+        num_doc_count += 1
+        doc_did = docs[did]
+        doc_str = f"Article Title: {doc_did['title']}\n{doc_did['text']}"
+        docs_added[did] = doc_str
+        golden_doc_str_list.append(f"\n {doc_str}")
+    golden_context = '\n\n'.join(golden_doc_str_list)
+    golden_prompt = template.replace('$DOC$', golden_context).replace('$Q$', query)
+    num_tokens_total = len(context_tokenizer.encode(golden_prompt)) + sep_token_count
+    
+    if num_tokens_total < context_size:
+        for _, did in ordered_score_did:
+            if did in docs_added:
+                continue
+            
+            num_doc_count += 1
+            
+            doc_did = docs[did]
+            doc_str_did = f"Article Title: {doc_did['title']}\n{doc_did['text']}"
+            doc_did_tokens = context_tokenizer.encode(doc_str_did)
+            stop_cutoff = context_size - sep_token_count
+            if len(doc_did_tokens) + num_tokens_total >= stop_cutoff:
+                doc_str_did = context_tokenizer.decode(doc_did_tokens[:context_size - num_tokens_total])
+                doc_did_tokens = context_tokenizer.encode(doc_str_did)
+            
+            num_tokens_total += len(doc_did_tokens)
+            assert num_tokens_total <= context_size
+            docs_added[did] = doc_str_did
+            num_tokens_total += sep_token_count
+
+            if num_tokens_total >= context_size:
+                break
+
+    ordered_dids = list(docs_added.keys())
+    ordered_dids.sort(key=lambda x: doc2score.get(x, float('-inf')), reverse=True)
+    haystack_context = '\n\n'.join(
+        [docs_added[did] for did in ordered_dids]
+    )
+    
+    if is_final_round:
+        # Final round: format for answering
+        if all_summaries:
+            opening_text = "Read your previous analyses and the following articles, answer the question below."
+            prev_summary_text = "Previous Analyses:\n"
+            for i, summary in enumerate(all_summaries):
+                prev_summary_text += f"Round {i+1}: {summary}\n"
+            prev_summary_text += "\n"
+        else:
+            opening_text = "Read the following articles and answer the question below."
+            prev_summary_text = ""
+        prompt = template.replace('$DOC$', haystack_context).replace('$Q$', query).replace('$PREV_SUMMARY$', prev_summary_text).replace('$OPENING$', opening_text)
+    else:
+        # Intermediate rounds: format for summarizing and generating next query
+        if all_summaries:
+            opening_text = "Read your previous analyses and the following articles. Analyze the question below."
+            prev_summary_text = "Previous Analyses:\n"
+            for i, summary in enumerate(all_summaries):
+                prev_summary_text += f"Round {i+1}: {summary}\n"
+            prev_summary_text += "\n"
+            instruction_text = "Based on your previous analyses and the potentially new articles provided, summarize your findings related to the question and refine the question."
+        else:
+            opening_text = "Read the following articles and analyze the question below."
+            prev_summary_text = ""
+            instruction_text = "Based on the articles provided, summarize your findings related to the question and refine the question."
+        
+        prompt = template.replace('$DOC$', haystack_context).replace('$Q$', query).replace('$PREV_SUMMARY$', prev_summary_text).replace('$INSTRUCTION$', instruction_text).replace('$OPENING$', opening_text)
+    
+    return ordered_dids, prompt
+
+def parse_llm_response(response):
+    """
+    Parse LLM response to extract summary and next query.
+    Expected format:
+    Summary: (summary text)
+    Refined Question: (query text)
+    
+    If parsing fails, treat the whole response as both summary and next question.
+    """    
+    # Try to find Summary and Next Query sections
+    summary_start = response.find("Summary:")
+    query_start = response.find("Refined Question:")
+    
+    if summary_start != -1 and query_start != -1:
+        # Both sections found
+        summary = response[summary_start + len("Summary:"):query_start].strip()
+        next_query = response[query_start + len("Refined Question:"):].strip()
+        return summary, next_query
+    elif summary_start != -1:
+        # Only summary found
+        summary = response[summary_start + len("Summary:"):].strip()
+        return summary, summary
+    elif query_start != -1:
+        # Only query found
+        next_query = response[query_start + len("Refined Question:"):].strip()
+        return next_query, next_query
+    else:
+        # No structured format found, use whole response for both
+        return response, response
 
 def get_pred_multi(data, args, out_file):
     context_tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-7B-Instruct-1M")
