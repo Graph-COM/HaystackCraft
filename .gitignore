@@ -1,0 +1,8 @@
+data
+**/__pycache__
+results/
+1_round_results
+2_round_results
+3_round_results
+max_2_round_results
+max_3_round_results
