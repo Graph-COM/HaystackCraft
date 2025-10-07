@@ -1,4 +1,4 @@
-# HaystackCraft
+# Haystack Engineering: Context Engineering for Heterogeneous and Agentic Long-Context Evaluation
 
 [[Link to Paper]](./paper.pdf)
 
