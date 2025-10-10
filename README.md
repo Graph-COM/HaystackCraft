@@ -1,6 +1,6 @@
 # Haystack Engineering: Context Engineering for Heterogeneous and Agentic Long-Context Evaluation
 
-[[Link to Paper]](./paper.pdf)
+[![arXiv](https://img.shields.io/badge/📄arXiv-2510.07414-ff6b6b?style=for-the-badge&logo=arxiv&logoColor=white&labelColor=1a1a2e)](https://arxiv.org/abs/2510.07414)
 
 ![fig](theme_figure.png)
 
