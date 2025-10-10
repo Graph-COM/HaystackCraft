@@ -15,6 +15,7 @@
     * [LLM Inference (Enforced Multi-Round)](#llm-inference-enforced-multi-round)
     * [LLM Inference (Variable-Round)](#llm-inference-variable-round)
     * [Evaluation](#evaluation)
+- [Citation](#citation)
 
 ## Environment Setup
 
@@ -114,4 +115,15 @@ For example
 
 ```bash
 python eval_100.py --result_dir 2_round_results/qwen3_0.6/gemini-2.5-flash-lite/8000/descending_order
+```
+
+## Citation
+
+```bash
+@article{li2025haystack,
+  title={Haystack Engineering: Context Engineering for Heterogeneous and Agentic Long-Context Evaluation},
+  author={Mufei Li and Dongqi Fu and Limei Wang and Si Zhang and Hanqing Zeng and Kaan Sancak and Ruizhong Qiu and Haoyu Wang and Xiaoxin He and Xavier Bresson and Yinglong Xia and Chonglin Sun and Pan Li},
+  journal={arXiv preprint arXiv:2510.07414},
+  year={2025}
+}
 ```
